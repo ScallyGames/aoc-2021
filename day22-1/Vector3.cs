@@ -1,0 +1,1 @@
+public record struct Vector(int X, int Y, int Z);
