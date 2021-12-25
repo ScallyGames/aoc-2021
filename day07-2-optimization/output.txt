@@ -1,0 +1,13 @@
+1500
+Interval (0, 1500)
+Interval (0, 750)
+Interval (375, 750)
+Interval (562, 750)
+Interval (656, 750)
+Interval (656, 703)
+Interval (679, 703)
+Interval (691, 703)
+Interval (697, 703)
+Interval (700, 703)
+Interval (700, 701)
+570800
