@@ -1,0 +1,1 @@
+record struct Vector2(int X, int Y);

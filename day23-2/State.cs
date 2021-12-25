@@ -1,0 +1,1 @@
+record struct State(RoomSetup RoomSetup, int Cost);
