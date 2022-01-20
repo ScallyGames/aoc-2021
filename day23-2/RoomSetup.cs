@@ -1,57 +1,30 @@
-public record struct RoomSetup(char[,] Value, int correctBonus = 10000) : IEquatable<RoomSetup>
+using System.Text;
+
+public record struct RoomSetup(char[,] Value) : IEquatable<RoomSetup>
 {
-    private int heuristicMemoization = -1;
-    private bool isHeuristicMemoized = false;
+    private string toStringMemoized = "";
 
-    public int Heuristic
+    public override string ToString()
     {
-        get
+        if(toStringMemoized == "")
         {
-            if(isHeuristicMemoized) return heuristicMemoization;
-
-            int evaluation = 0;
-
+            StringBuilder sb = new StringBuilder();
             for(int y = 0; y < Value.GetLength(0); y++)
             {
                 for(int x = 0; x < Value.GetLength(1); x++)
                 {
-                    if(!"ABCD".Contains(InputData.TargetSetup.Value[y, x])) continue;
-
-                    if(Value[y, x] == InputData.TargetSetup.Value[y, x])
-                    {
-                        // is at right spot
-
-                        bool isNotCovering = true;
-                        var that = this;
-                        for(int stackPosition = y; stackPosition < Value.GetLength(0); stackPosition++)
-                        {
-                            if("ABCD".Where(n => n != that.Value[y, x]).Contains(that.Value[stackPosition, x]))
-                            {
-                                isNotCovering = false;
-                                break;
-                            }
-                        }
-                        if(isNotCovering)
-                        {
-                            evaluation -= correctBonus;
-                        }
-                    } else if(Value[y, x] != '.')
-                    {
-                        evaluation += 1000;
-                    }
+                    sb.Append(Value[y, x]);
                 }
+                sb.AppendLine();
             }
-            heuristicMemoization = evaluation;
-            isHeuristicMemoized = true;
-            return evaluation;
+            toStringMemoized = sb.ToString();
         }
+        return toStringMemoized;
     }
-
-
 
     public bool Equals(RoomSetup other)
     {
-        return Enumerable.SequenceEqual(Value.Cast<char>(), other.Value.Cast<char>());
+        return this.ToString() == other.ToString();
     }
 
     public override int GetHashCode()
