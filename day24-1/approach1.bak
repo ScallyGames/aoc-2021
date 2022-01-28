@@ -1,0 +1,169 @@
+﻿string[] instructions = File.ReadAllLines("input.txt");
+
+var instructionList = new InstructionList(instructions);
+
+int iteration = 0;
+
+var checks = new []
+{
+    Memoized(Parse0),
+    Memoized(Parse1),
+    Memoized(Parse2),
+    Memoized(Parse3),
+    Memoized(Parse4),
+    Memoized(Parse5),
+    Memoized(Parse6),
+    Memoized(Parse7),
+    Memoized(Parse8),
+    Memoized(Parse9),
+    Memoized(Parse10),
+    Memoized(Parse11),
+    Memoized(Parse12),
+    Memoized(Parse13),
+};
+
+foreach (var inputDigits in GetPossibleDigits())
+{
+    iteration++;
+
+    if (IsValid(inputDigits))
+    {
+        Console.WriteLine("Is correct: " + inputDigits);
+    }
+}
+
+
+bool IsValid(string d)
+{
+    int z = 0;
+    
+    for(int i = 0; i < checks.Length; i++)
+    {
+        try
+        {
+            z = checks[i](int.Parse(d[i] + ""), z);
+        }
+        catch(ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    return z == 0;
+}
+
+Func<int, int, int> Memoized(Func<int, int, int> sourceFunction)
+{
+    HashSet<(int, int)> memoizationStorage = new HashSet<(int, int)>();
+
+    return (int digit, int z) =>
+    {
+        var newZ = sourceFunction(digit, z);
+
+
+        var accessIndex = (digit, newZ);
+        if(memoizationStorage.Contains(accessIndex)) throw new ArgumentException();
+
+        return newZ;
+    };
+}
+
+static int Parse0(int d0, int z)
+{
+    return (d0 + 2) * 26;
+}
+
+static int Parse1(int d1, int z)
+{
+    return z + (d1 + 4);
+}
+
+static int Parse2(int d2, int z)
+{
+    int x = (z % 26) + 14 == d2 ? 0 : 1;
+    return z * ((25 * x) + 1) + ((d2 + 8) * x);
+}
+
+static int Parse3(int d3, int z)
+{
+    int x = (z % 26) + 11 == d3 ? 0 : 1;
+    return z * ((25 * x) + 1) + ((d3 + 7) * x);
+}
+
+static int Parse4(int d4, int z)
+{
+    int x = (z % 26) + 14 == d4 ? 0 : 1;
+    return z * ((25 * x) + 1) + ((d4 + 12) * x);
+}
+
+static int Parse5(int d5, int z)
+{
+    int x = (z % 26) - 14 == d5 ? 0 : 1;
+    z = z / 26;
+    return z + ((25 * x) + 1) + ((d5 + 7) * x);
+}
+
+static int Parse6(int d6, int z)
+{
+    int x = (z % 26) == d6 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d6 + 10) * x);
+}
+
+static int Parse7(int d7, int z)
+{
+    int x = (z % 26) + 10 == d7 ? 0 : 1;
+    return z * ((25 * x) + 1) + ((d7 + 14) * x);
+}
+
+static int Parse8(int d8, int z)
+{
+    int x = (z % 26) - 10 == d8 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d8 + 2) * x);
+}
+
+static int Parse9(int d9, int z)
+{
+    int x = (z % 26) + 13 == d9 ? 0 : 1;
+    return z * ((25 * x) + 1) + ((d9 + 6) * x);
+}
+
+static int Parse10(int d10, int z)
+{
+    int x = (z % 26) - 12 == d10 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d10 + 8) * x);
+}
+
+static int Parse11(int d11, int z)
+{
+    int x = (z % 26) - 3 == d11 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d11 + 11) * x);
+}
+
+static int Parse12(int d12, int z)
+{
+    int x = (z % 26) - 11 == d12 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d12 + 5) * x);
+}
+
+static int Parse13(int d13, int z)
+{
+    int x = (z % 26) - 2 == d13 ? 0 : 1;
+    z = z / 26;
+    return z * ((25 * x) + 1) + ((d13 + 11) * x);
+}
+
+static IEnumerable<string> GetPossibleDigits()
+{
+    for (long i = (long)Math.Pow(10, 14) - 1; i >= Math.Pow(10, 13); i--)
+    {
+        string inputDigits = i.ToString();
+        if (inputDigits.Contains("0")) continue;
+
+        yield return inputDigits;
+    }
+}
